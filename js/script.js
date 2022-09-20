@@ -41,7 +41,7 @@ window.addEventListener('DOMContentLoaded', () => {
     });
 
     /* timer */
-    const deadline = '2022-09-17, 14:20';
+    const deadline = '2022.09.30';
     function getTimeRamaining(endtime) {
         let days, hours, minutes, seconds;
         const t = Date.parse(endtime) - Date.parse(new Date());
@@ -105,6 +105,72 @@ window.addEventListener('DOMContentLoaded', () => {
         }
     }
     setClock('.timer', deadline);
+
+/* modal */
+
+    const modalTrigger = document.querySelectorAll('[data-modal]'),
+          modalCloseBtn = document.querySelector('[data-close'),
+          modal = document.querySelector('.modal');
+
+
+    function openModal() {
+        modal.classList.add('show', 'fade');
+        modal.classList.remove('hide');
+        document.body.style.overflow = 'hidden';
+        /* допустим вариант с toggle только нужно добавить класс show = modal*/
+        clearInterval(modalTimerId);
+    }
+
+    modalTrigger.forEach(btn => {
+        btn.addEventListener('click', openModal);
+    });
+
+    function closeModal() {
+            modal.classList.add('hide', 'fade');
+            modal.classList.remove('show');
+            document.body.style.overflow = '';
+
+    }
+
+    modalCloseBtn.addEventListener('click', closeModal);
+
+    modal.addEventListener('click', (event) => {
+        const target = event.target;
+
+        // if (target === modal) {
+        //     closeModal();
+        // }
+        if (target && target.classList.contains('modal')) {
+            closeModal();
+        }
+    });
+
+    document.addEventListener('keydown', (event) => {
+        if (event.code === 'Escape' && modal.classList.contains('show')) {
+            closeModal();
+        }
+        /* modal.classList.contains('show') проверим дабы лишний раз не работала команда  */
+    });
+
+    function showModalByScroll() {
+        let scrollHeight = Math.max(
+            document.body.scrollHeight, document.documentElement.scrollHeight
+        );
+
+        if (window.pageYOffset + document.documentElement.clientHeight >= scrollHeight -1) {
+            openModal();
+            window.removeEventListener('scroll', showModalByScroll);
+        }
+    }
+
+    window.addEventListener('scroll', showModalByScroll);
+
+    const modalTimerId = setTimeout(() => {
+        openModal();
+        window.removeEventListener('scroll', showModalByScroll);
+    }, 3000);
+
+
 
 
 
