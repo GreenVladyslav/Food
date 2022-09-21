@@ -110,7 +110,8 @@ window.addEventListener('DOMContentLoaded', () => {
 
     const modalTrigger = document.querySelectorAll('[data-modal]'),
           modalCloseBtn = document.querySelector('[data-close'),
-          modal = document.querySelector('.modal');
+          modal = document.querySelector('.modal'),
+          scroll = calcScroll();
 
 
     function openModal() {
@@ -119,6 +120,8 @@ window.addEventListener('DOMContentLoaded', () => {
         document.body.style.overflow = 'hidden';
         /* допустим вариант с toggle только нужно добавить класс show = modal*/
         clearInterval(modalTimerId);
+
+        document.body.style.marginRight = `${scroll}px`;
     }
 
     modalTrigger.forEach(btn => {
@@ -129,6 +132,7 @@ window.addEventListener('DOMContentLoaded', () => {
             modal.classList.add('hide', 'fade');
             modal.classList.remove('show');
             document.body.style.overflow = '';
+            document.body.style.marginRight = '0px';
 
     }
 
@@ -158,7 +162,7 @@ window.addEventListener('DOMContentLoaded', () => {
         );
 
         if (window.pageYOffset + document.documentElement.clientHeight >= scrollHeight -1) {
-            openModal();
+                openModal();
             window.removeEventListener('scroll', showModalByScroll);
         }
     }
@@ -169,6 +173,24 @@ window.addEventListener('DOMContentLoaded', () => {
         openModal();
         window.removeEventListener('scroll', showModalByScroll);
     }, 3000);
+
+    function calcScroll() {
+        const div = document.createElement('div');
+
+        div.style.width = '50px';
+        div.style.height = '50px';
+        div.style.overflowY = 'scroll';
+        div.style.visibility = 'hidden';
+
+        document.body.append(div);
+
+        let scrollWidth = div.offsetWidth - div.clientWidth;
+
+        div.remove();
+
+        return scrollWidth;
+    }
+/* classes */
 
 
 
