@@ -10,7 +10,9 @@ window.addEventListener('DOMContentLoaded', () => {
     function hideTabsContent() {
         tabsContent.forEach(item => {
             item.classList.add('hide');
-            item.classList.remove('show', 'fade');
+            // item.classList.remove('show', 'fade');
+            item.classList.remove('animate__animated', 'animate__slideInDown');
+
         });
 
         tabs.forEach(item => {
@@ -20,8 +22,11 @@ window.addEventListener('DOMContentLoaded', () => {
 
     function showTabsContent(i = 0) {
         tabsContent[i].classList.remove('hide');
-        tabsContent[i].classList.add('show', 'fade');
+        // tabsContent[i].classList.add('show', 'fade');
+        tabsContent[i].classList.add('animate__animated', 'animate__slideInDown');
+
         tabs[i].classList.add('tabheader__item_active');
+        
     }
 
     hideTabsContent();
@@ -112,6 +117,7 @@ window.addEventListener('DOMContentLoaded', () => {
           modalCloseBtn = document.querySelector('[data-close'),
           modal = document.querySelector('.modal'),
           scroll = calcScroll();
+    let btnPressedModalTrigger;
 
 
     function openModal() {
@@ -122,6 +128,8 @@ window.addEventListener('DOMContentLoaded', () => {
         clearInterval(modalTimerId);
 
         document.body.style.marginRight = `${scroll}px`;
+
+        btnPressedModalTrigger = true;
     }
 
     modalTrigger.forEach(btn => {
@@ -161,7 +169,7 @@ window.addEventListener('DOMContentLoaded', () => {
             document.body.scrollHeight, document.documentElement.scrollHeight
         );
 
-        if (window.pageYOffset + document.documentElement.clientHeight >= scrollHeight -1) {
+        if (!btnPressedModalTrigger && window.pageYOffset + document.documentElement.clientHeight >= scrollHeight -1) {
                 openModal();
             window.removeEventListener('scroll', showModalByScroll);
         }
@@ -169,10 +177,10 @@ window.addEventListener('DOMContentLoaded', () => {
 
     window.addEventListener('scroll', showModalByScroll);
 
-    const modalTimerId = setTimeout(() => {
-        openModal();
-        window.removeEventListener('scroll', showModalByScroll);
-    }, 3000);
+    // const modalTimerId = setTimeout(() => {
+    //     openModal();
+    //     window.removeEventListener('scroll', showModalByScroll);
+    // }, 3000);
 
     function calcScroll() {
         const div = document.createElement('div');
@@ -190,9 +198,73 @@ window.addEventListener('DOMContentLoaded', () => {
 
         return scrollWidth;
     }
+
 /* classes */
 
+    class MenuCard {
+        constructor(src, alt, subtitle, descr, price, parentSelector, ...classes) {
+            this.src = src;
+            this.alt = alt;
+            this.subtitle = subtitle;
+            this.descr = descr;
+            this.price = price;
+            this.classes = classes;
+            this.parent = document.querySelector(parentSelector);
+            this.transfer = 40;
+            this.changeToUAH();
+        }
+        changeToUAH() {
+            this.price = +this.price * this.transfer;
+        }
+        render() {
+            const card = document.createElement('div');
 
+            if (this.classes.length === 0) { /* переденанное количество классов */
+                this.classes = 'menu__item'; /*this.classes это пустой массив так как ...rest передает массив и мы ему ставим параметры по умолчанию */
+                card.classList.add(this.classes);
+            } else {
+                this.classes.forEach(className => card.classList.add(className)); /* все остальные классы добавлю card */
+            }
+
+            card.innerHTML = `
+                <img src=${this.src} alt=${this.alt}>
+                <h3 class="menu__item-subtitle">${this.subtitle}</h3>
+                <div class="menu__item-descr">${this.descr}</div>
+                <div class="menu__item-divider"></div>
+                <div class="menu__item-price">
+                    <div class="menu__item-cost">Цена:</div>
+                    <div class="menu__item-total"><span>${this.price}</span> грн/день</div>
+                </div>
+            `;
+
+           this.parent.append(card);
+        }
+    }
+
+    new MenuCard(
+        "img/tabs/vegy.jpg", 'vegy', 
+        'Меню "Фитнес"', 
+        'Меню "Фитнес" - это новый подход к приготовлению блюд: больше свежих овощей и фруктов. Продукт активных и здоровых людей. Это абсолютно новый продукт с оптимальной ценой и высоким качеством!',
+        9,
+        '.menu__field .container',
+        // 'menu__item'
+        ).render();
+
+    new MenuCard("img/tabs/elite.jpg", 'elite', 
+        'Меню “Премиум”', 
+        'В меню “Премиум” мы используем не только красивый дизайн упаковки, но и качественное исполнение блюд. Красная рыба, морепродукты, фрукты - ресторанное меню без похода в ресторан!', 
+        14,
+        '.menu__field .container',
+        // 'menu__item'
+    ).render();
+    
+    new MenuCard("img/tabs/post.jpg", 'post', 
+        'Меню "Постное"', 
+        'Меню “Постное” - это тщательный подбор ингредиентов: полное отсутствие продуктов животного происхождения, молоко из миндаля, овса, кокоса или гречки, правильное количество белков за счет тофу и импортных вегетарианских стейков.',
+        21,
+        '.menu__field .container',
+        // 'menu__item'
+     ).render();
 
 
 
