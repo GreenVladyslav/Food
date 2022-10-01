@@ -239,301 +239,166 @@ window.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    new MenuCard(
-        "img/tabs/vegy.jpg", 'vegy', 
-        'Меню "Фитнес"', 
-        'Меню "Фитнес" - это новый подход к приготовлению блюд: больше свежих овощей и фруктов. Продукт активных и здоровых людей. Это абсолютно новый продукт с оптимальной ценой и высоким качеством!',
-        9,
-        '.menu__field .container',
-        // 'menu__item'
-        ).render();
 
-    new MenuCard("img/tabs/elite.jpg", 'elite', 
-        'Меню “Премиум”', 
-        'В меню “Премиум” мы используем не только красивый дизайн упаковки, но и качественное исполнение блюд. Красная рыба, морепродукты, фрукты - ресторанное меню без похода в ресторан!', 
-        14,
-        '.menu__field .container',
-        // 'menu__item'
-    ).render();
+    const getResource = async (url) => {
+        const res = await fetch(url);
+
+        if (!res.ok) {
+            throw new Error (`Could now fetch ${url}, status: ${res.status}`);
+        }
+
+        return res.json();
+    };
+
+    getResource('http://localhost:3000/menu')
+        .then(data => {
+            data.forEach(({img, altimg, title, descr, price}) => {
+                new MenuCard (img, altimg, title, descr, price, '.menu__field .container').render();
+            });
+        });
+
+
+
+
+
+    // getResource('http://localhost:3000/menu')
+    //     .then(data => menuCard(data, '.menu__field .container'));
+
+    // function menuCard(data, parentSelector) {
+    //     data.forEach(({img, altimg, title, descr, price}) => {
+    //         const card = document.createElement('div');
+    //         card.classList.add('menu__item');
+
+    //         card.innerHTML = `
+    //                     <img src=${img} alt=${altimg}>
+    //                     <h3 class="menu__item-subtitle">${title}</h3>
+    //                     <div class="menu__item-descr">${descr}</div>
+    //                     <div class="menu__item-divider"></div>
+    //                     <div class="menu__item-price">
+    //                         <div class="menu__item-cost">Цена:</div>
+    //                         <div class="menu__item-total"><span>${price}</span> грн/день</div>
+    //                     </div>
+    //                 `;
+            
+    //         document.querySelector(parentSelector).append(card);
+    //     });
+    // }
+
+    // new MenuCard(
+    //     "img/tabs/vegy.jpg", 'vegy', 
+    //     'Меню "Фитнес"', 
+    //     'Меню "Фитнес" - это новый подход к приготовлению блюд: больше свежих овощей и фруктов. Продукт активных и здоровых людей. Это абсолютно новый продукт с оптимальной ценой и высоким качеством!',
+    //     9,
+    //     '.menu__field .container',
+    //     // 'menu__item'
+    //     ).render();
+
+    // new MenuCard("img/tabs/elite.jpg", 'elite', 
+    //     'Меню “Премиум”', 
+    //     'В меню “Премиум” мы используем не только красивый дизайн упаковки, но и качественное исполнение блюд. Красная рыба, морепродукты, фрукты - ресторанное меню без похода в ресторан!', 
+    //     14,
+    //     '.menu__field .container',
+    //     // 'menu__item'
+    // ).render();
     
-    new MenuCard("img/tabs/post.jpg", 'post', 
-        'Меню "Постное"', 
-        'Меню “Постное” - это тщательный подбор ингредиентов: полное отсутствие продуктов животного происхождения, молоко из миндаля, овса, кокоса или гречки, правильное количество белков за счет тофу и импортных вегетарианских стейков.',
-        21,
-        '.menu__field .container',
-        // 'menu__item'
-    ).render();
+    // new MenuCard("img/tabs/post.jpg", 'post', 
+    //     'Меню "Постное"', 
+    //     'Меню “Постное” - это тщательный подбор ингредиентов: полное отсутствие продуктов животного происхождения, молоко из миндаля, овса, кокоса или гречки, правильное количество белков за счет тофу и импортных вегетарианских стейков.',
+    //     21,
+    //     '.menu__field .container',
+    //     // 'menu__item'
+    // ).render();
 
+
+
+    // axios.get('http://localhost:3000/menu')
+    //     .then(data => {
+    //         console.log(data);
+    //         return data;
+    //     }).then(data => {
+    //         data.data.forEach(({img, altimg, title, descr, price}) => {
+    //             new MenuCard(img, altimg, title, descr, price, '.menu__field .container').render();
+    //         });
+    //     });
   
 /* form */
 
-    // const forms = document.querySelectorAll('form'),
-    //       formInput = document.querySelectorAll('input');
-    
-    // const messages = {
-    //     loading: 'img/form/spinner.svg',
-    //     success: 'Спасибо! Скоро мы с вами свяжемся!',
-    //     failure: 'Что-то пошло не так...'
-    // };
-
-    // forms.forEach(form => {
-    //     postData(form);
-    // });
-
-    // function clearInput() {
-    //     formInput.forEach(item => {
-    //         item.value = '';
-    //     });
-    // }
-
-
-    // function postData(form) {
-    //     form.addEventListener('submit', (event) => {
-    //         event.preventDefault(); /* в AJAX запросах всегда первая */
-
-    //         const statusMessage = document.createElement('img');
-    //         // statusMessage.classList.add('status'); /* status - нет в верстке */
-    //         statusMessage.src = messages.loading;
-    //         statusMessage.style.cssText = `
-    //             display: block;
-    //             margin: 0 auto;
-    //         `;
-    //         form.insertAdjacentElement('afterend', statusMessage); /* спиннер после формы вставил */
-
-    //         const formData = new FormData(form);
-
-    //         const object = {};
-    //         formData.forEach((key, value) => {
-    //             object[key] = value;
-    //         });
-
-    //         const json = JSON.stringify(object);
-
-    //         fetch('server.php', {
-    //             method: 'POST',
-    //             headers: {
-    //                 'Contet-type': 'application/json'
-    //             },
-    //             body: formData
-    //         }).then(res => {
-    //             return res.text();
-    //         }).then(res => {
-    //             console.log(res);
-    //             showThanksModal(messages.success);
-    //             statusMessage.remove();
-    //         }).catch(() => {
-    //             console.error('Empty');
-    //             showThanksModal(messages.failure);
-    //         }).finally(() => {
-    //             form.reset();
-    //         });
-
-    //     });
-    // }
-
-
-
-    // function showThanksModal(messages) {
-    //     const prevModalDialog  = document.querySelector('.modal__dialog');
-
-    //     prevModalDialog.classList.add('hide');
-    //     openModal();
-
-    //     const thanksModal = document.createElement('div');
-    //     thanksModal.classList.add('modal__dialog');
-    //     thanksModal.innerHTML = `
-    //         <div class="modal__content">
-    //             <div data-close class="modal__close">&times;</div>
-    //             <div class="modal__title">${messages}</div>
-    //         </div>
-    //     `;
-
-    //     document.querySelector('.modal').append(thanksModal);
-    //     setTimeout(() => {
-    //         thanksModal.remove();
-    //         prevModalDialog.classList.add('show');
-    //         prevModalDialog.classList.remove('hide');
-    //         closeModal();
-    //     }, 4000);
-    // }
-
-
-
-    // const forms = document.querySelectorAll('form'),
-    //       formInput = document.querySelectorAll('input');
-    
-    // const messages = {
-    //     loading: 'img/form/spinner.svg',
-    //     success: 'Спасибо! Скоро мы с вами свяжемся!',
-    //     failure: 'Что-то пошло не так...'
-    // };
-
-    // forms.forEach(form => {
-    //     postData(form);
-    // });
-
-    // function clearInput() {
-    //     formInput.forEach(item => {
-    //         item.value = '';
-    //     });
-    // }
-
-
-    // function postData(form) {
-    //     form.addEventListener('submit', (event) => {
-    //         event.preventDefault(); /* в AJAX запросах всегда первая */
-
-    //         const statusMessage = document.createElement('img');
-    //         // statusMessage.classList.add('status'); /* status - нет в верстке */
-    //         statusMessage.src = messages.loading;
-    //         statusMessage.style.cssText = `
-    //             display: block;
-    //             margin: 0 auto;
-    //         `;
-    //         form.insertAdjacentElement('afterend', statusMessage); /* спиннер после формы вставил */
-
-    //         const formData = new FormData(form);
-
-    //         const object = {};
-    //         formData.forEach((key, value) => {
-    //             object[key] = value;
-    //         });
-
-    //         const json = JSON.stringify(object);
-
-    //         fetch('server.php', {
-    //             method: 'POST',
-    //             headers: {
-    //                 'Contet-type': 'application/json'
-    //             },
-    //             body: formData
-    //         }).then(res => {
-    //             return res.text();
-    //         }).then(res => {
-    //             console.log(res);
-    //             showThanksModal(messages.success);
-    //             statusMessage.remove();
-    //         }).catch(() => {
-    //             console.error('Empty');
-    //             showThanksModal(messages.failure);
-    //         }).finally(() => {
-    //             form.reset();
-    //         });
-
-    //     });
-    // }
-
-
-
-    // function showThanksModal(messages) {
-    //     const prevModalDialog  = document.querySelector('.modal__dialog');
-
-    //     prevModalDialog.classList.add('hide');
-    //     openModal();
-
-    //     const thanksModal = document.createElement('div');
-    //     thanksModal.classList.add('modal__dialog');
-    //     thanksModal.innerHTML = `
-    //         <div class="modal__content">
-    //             <div data-close class="modal__close">&times;</div>
-    //             <div class="modal__title">${messages}</div>
-    //         </div>
-    //     `;
-
-    //     document.querySelector('.modal').append(thanksModal);
-    //     setTimeout(() => {
-    //         thanksModal.remove();
-    //         prevModalDialog.classList.add('show');
-    //         prevModalDialog.classList.remove('hide');
-    //         closeModal();
-    //     }, 4000);
-    // }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     const forms = document.querySelectorAll('form'),
-    formInput = document.querySelectorAll('input');
-
+          formInput = document.querySelectorAll('input');
+    
     const messages = {
         loading: 'img/form/spinner.svg',
-        success: 'Спасибо мы с вами свяжемся',
+        success: 'Спасибо! Скоро мы с вами свяжемся!',
         failure: 'Что-то пошло не так...'
     };
 
     forms.forEach(form => {
-        postData(form);
+        bindPostData(form);
     });
 
-    function clearInput() {
-        formInput.forEach(item => {
-            item.value = '';
+    // function clearInput() {
+    //     formInput.forEach(item => {
+    //         item.value = '';
+    //     });
+    // }
+
+    const postData = async (url, data) => {
+        const res = await fetch(url, {
+            method: 'POST',
+            headers: {
+                'Content-type': 'application/json'
+            },
+            body: data
         });
-    }
+
+        return await res.json();
+    };
 
 
-    function postData(form) {
+    function bindPostData(form) {
         form.addEventListener('submit', (event) => {
             event.preventDefault(); /* в AJAX запросах всегда первая */
 
             const statusMessage = document.createElement('img');
             // statusMessage.classList.add('status'); /* status - нет в верстке */
-            statusMessage.setAttribute('src', messages.loading);
+            statusMessage.src = messages.loading;
             statusMessage.style.cssText = `
                 display: block;
                 margin: 0 auto;
             `;
-            form.insertAdjacentElement('afterend', statusMessage);
+            form.insertAdjacentElement('afterend', statusMessage); /* спиннер после формы вставил */
 
-            const request = new XMLHttpRequest();
-            request.open('POST', 'server.php');
-
-            /* request.setRequestHeader('Content-type', 'multipart/form-data'); */
-            request.setRequestHeader('Content-type', 'application/json');
             const formData = new FormData(form);
 
-            const object = {};
-                formData.forEach((key, value) => {
-                    object[key] = value;
+            // const object = {};
+            // formData.forEach((key, value) => {
+            //     object[key] = value;
+            // });
+
+            // const json = JSON.stringify(object);
+
+            const json = JSON.stringify(Object.fromEntries(formData.entries()));
+
+            postData('http://localhost:3000/requests', json)
+            .then(res => {
+                console.log(res);
+                showThanksModal(messages.success);
+                statusMessage.remove();
+            }).catch(() => {
+                console.error('Empty');
+                showThanksModal(messages.failure);
+            }).finally(() => {
+                form.reset();
             });
 
-            const json = JSON.stringify(object);
-
-            request.send(json);
-
-            request.addEventListener('load', () => {
-                if (request.status === 200) {
-                    console.log(request.response);
-                    // statusMessage.textContent = messages.success;
-                    showThanksModal(messages.success);
-                    // form.append(statusMessage);
-                    // form.reset();
-                    clearInput();
-                    statusMessage.remove();
-                } else {
-                    // statusMessage.textContent = messages.failure;
-                    showThanksModal(messages.failure);
-                    // form.append(statusMessage);
-                }
-            });
         });
     }
 
 
+
     function showThanksModal(messages) {
-        const prevModalDialog = document.querySelector('.modal__dialog');
+        const prevModalDialog  = document.querySelector('.modal__dialog');
+
         prevModalDialog.classList.add('hide');
         openModal();
 
@@ -547,7 +412,6 @@ window.addEventListener('DOMContentLoaded', () => {
         `;
 
         document.querySelector('.modal').append(thanksModal);
-
         setTimeout(() => {
             thanksModal.remove();
             prevModalDialog.classList.add('show');
@@ -557,4 +421,128 @@ window.addEventListener('DOMContentLoaded', () => {
     }
 
 
+
+
+
+
+
+
+
+
+
+
+
+    // const forms = document.querySelectorAll('form'),
+    // formInput = document.querySelectorAll('input');
+
+    // const messages = {
+    //     loading: 'img/form/spinner.svg',
+    //     success: 'Спасибо мы с вами свяжемся',
+    //     failure: 'Что-то пошло не так...'
+    // };
+
+    // forms.forEach(form => {
+    //     bindPostData(form);
+    // });
+
+    // function clearInput() {
+    //     formInput.forEach(item => {
+    //         item.value = '';
+    //     });
+    // }
+
+    // const postData = async (url, data) => {
+    //     const res = await fetch(url, {
+    //         method: "POST",
+    //         headers: {
+    //             'Content-type': 'application/json'
+    //         },
+    //         body: data
+    //     });
+
+    //     return await res.json(); 
+    // };
+
+    // function bindPostData(form) {
+    //     form.addEventListener('submit', (event) => {
+    //         event.preventDefault(); /* в AJAX запросах всегда первая */
+
+    //         const statusMessage = document.createElement('img');
+    //         // statusMessage.classList.add('status'); /* status - нет в верстке */
+    //         statusMessage.setAttribute('src', messages.loading);
+    //         statusMessage.style.cssText = `
+    //             display: block;
+    //             margin: 0 auto;
+    //         `;
+    //         form.insertAdjacentElement('afterend', statusMessage);
+
+    //         const formData = new FormData(form);
+    //         const json = JSON.stringify(Object.fromEntries(formData.entries()));
+
+    //         // const object = {};
+    //         // formData.forEach((key, value) => {
+    //         //     object[key] = value;
+    //         // });
+
+
+    //         postData('http://localhost:3000/requests', json)
+    //         .then(data => {
+    //             console.log(data);
+    //             showThanksModal(messages.success);
+    //             statusMessage.remove();
+    //         }).catch(() => {
+    //             showThanksModal(messages.failure);
+    //         }).finally(() => {
+    //             form.reset();
+    //         });
+    //     });
+    // }
+
+
+    // function showThanksModal(messages) {
+    //     const prevModalDialog = document.querySelector('.modal__dialog');
+    //     prevModalDialog.classList.add('hide');
+    //     openModal();
+
+    //     const thanksModal = document.createElement('div');
+    //     thanksModal.classList.add('modal__dialog');
+    //     thanksModal.innerHTML = `
+    //         <div class="modal__content">
+    //             <div data-close class="modal__close">&times;</div>
+    //             <div class="modal__title">${messages}</div>
+    //         </div>
+    //     `;
+
+    //     document.querySelector('.modal').append(thanksModal);
+
+    //     setTimeout(() => {
+    //         thanksModal.remove();
+    //         prevModalDialog.classList.add('show');
+    //         prevModalDialog.classList.remove('hide');
+    //         closeModal();
+    //     }, 4000);
+    // }
+
+    // const getResource = async (url) => {
+    //     const res = await fetch (url);
+
+    //     if (!res.ok) {
+    //         throw new Error(`Could not fetch ${url}, status: ${res.status}`);
+    //     }
+
+    //     return await res.json();
+    // };
+
+    // getResource('http://localhost:3000/menu')
+    //     .then(data => {
+    //         data.forEach(({img, altimg, title, descr, price}) => {
+    //             new MenuCard(img, altimg, title, descr, price, '.menu__field .container').render();
+    //         });
+    //     });
+
+
+
+    // slider
+
+    
 });
