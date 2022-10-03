@@ -46,7 +46,7 @@ window.addEventListener('DOMContentLoaded', () => {
     });
 
     /* timer */
-    const deadline = '2022.09.30';
+    const deadline = '2022.10.31';
     function getTimeRamaining(endtime) {
         let days, hours, minutes, seconds;
         const t = Date.parse(endtime) - Date.parse(new Date());
@@ -544,5 +544,52 @@ window.addEventListener('DOMContentLoaded', () => {
 
     // slider
 
-    
+    const slides = document.querySelectorAll('.offer__slide'),
+          slidesWrapper = document.querySelector('.offer__slider-wrapper'),
+          sliderNext = document.querySelector('.offer__slider-next'),
+          sliderPrev = document.querySelector('.offer__slider-prev'),
+          current = document.querySelector('#current'),
+          total = document.querySelector('#total');
+
+    let slideIndex = 1;
+
+    showSlider(slideIndex);
+
+    if (slides.length < 10) {
+        total.textContent = `0${slides.length}`;
+    } else {
+        total.textContent = `${slides.length}`;
+    }
+
+    function showSlider(n) {
+        if (n > slides.length) {
+            slideIndex = 1;
+        }
+
+        if (n < 1) {
+            slideIndex = slides.length;
+        }
+
+        slides.forEach(slide => slide.style.display = 'none');
+
+        slides[slideIndex - 1].style.display = 'block';
+
+        if (slides.length < 10) {
+            current.textContent = `0${slideIndex}`;
+        } else {
+            current.textContent = `${slideIndex}`;
+        }
+    }
+
+    function plusSlider(n) {
+        showSlider(slideIndex += n);
+    }
+
+    sliderNext.addEventListener('click', () => {
+        plusSlider(1);
+    });
+
+    sliderPrev.addEventListener('click', () => {
+        plusSlider(-1);
+    });
 });
