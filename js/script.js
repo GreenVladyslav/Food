@@ -574,7 +574,7 @@ window.addEventListener('DOMContentLoaded', () => {
 
         slides[slideIndex - 1].style.display = 'block';
 
-        if (slides.length < 10) {
+        if (slideIndex < 10) {
             current.textContent = `0${slideIndex}`;
         } else {
             current.textContent = `${slideIndex}`;
