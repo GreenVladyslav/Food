@@ -556,6 +556,7 @@ window.addEventListener('DOMContentLoaded', () => {
     let slideIndex = 1;
     let offset = 0;
     const dots = [];
+    let autoplay = false;
 
     if (slides.length < 10 || slideIndex == 1) {
         total.textContent = getZero(slides.length);
@@ -633,46 +634,53 @@ window.addEventListener('DOMContentLoaded', () => {
     }
 
     function deleteNoDigits(str) {
-        return +str.replace(/\D/ig, '');
+        return +str.replace(/\D/g, '');
     }
 
-    nextSlide.addEventListener('click', () => {
-        if (offset == deleteNoDigits(width) * (slides.length - 1)) {
-            offset = 0;
-        } else {
-            offset += deleteNoDigits(width);
-        }
+    function nextSlides() {
+        nextSlide.addEventListener('click', () => {
+            if (offset == deleteNoDigits(width) * (slides.length - 1)) {
+                offset = 0;
+            } else {
+                offset += deleteNoDigits(width);
+            }
+    
+            sliderField.style.transform = `translateX(-${offset}px)`;
 
-        sliderField.style.transform = `translateX(-${offset}px)`;
+            if (slideIndex == slides.length) {
+                slideIndex = 1;
+            } else {
+                slideIndex++;
+            }
+    
+            currentSlider();
+            dotActive();
+        });
+    }
+    nextSlides();
 
-        if (slideIndex == slides.length) {
-            slideIndex = 1;
-        } else {
-            slideIndex++;
-        }
-
-        currentSlider();
-        dotActive();
-    });
-
-    prevSlide.addEventListener('click', () => {
-        if (offset == 0) {
-            offset = deleteNoDigits(width) * (slides.length - 1);
-        } else {
-            offset += deleteNoDigits(width);
-        }
-
-        sliderField.style.transform = `translateX(-${offset}px)`;
-
-        if (slideIndex == 1) {
-            slideIndex = slides.length;
-        } else {
-            slideIndex--;
-        }
-
-        currentSlider();
-        dotActive();
-    });
+    function prevSlides() {
+        prevSlide.addEventListener('click', () => {
+            if (offset == 0) {
+                offset = deleteNoDigits(width) * (slides.length - 1);
+            } else {
+                offset += deleteNoDigits(width);
+            }
+    
+            sliderField.style.transform = `translateX(-${offset}px)`;
+    
+            if (slideIndex == 1) {
+                slideIndex = slides.length;
+            } else {
+                slideIndex--;
+            }
+    
+            currentSlider();
+            dotActive();
+        });
+    }
+    prevSlides();
+    
 
     dots.forEach(dot => {
         dot.addEventListener('click', (event) => {
@@ -689,73 +697,40 @@ window.addEventListener('DOMContentLoaded', () => {
         });
     });
 
+    function autoPlayGo() {
+        autoplay = setInterval(() => {
+            nextSlide.click();
+        }, 4000);
+
+    }
+    autoPlayGo();
+
+    slides[0].parentNode.addEventListener('mouseenter', () => {
+        clearInterval(autoplay);
+    });
+
+    nextSlide.addEventListener('mouseenter', () => {
+        clearInterval(autoplay);
+    });
+
+    prevSlide.addEventListener('mouseenter', () => {
+        clearInterval(autoplay);
+    });
+
+    slides[0].parentNode.addEventListener('mouseleave', () => {
+        autoPlayGo();
+    });
+
+    nextSlide.addEventListener('mouseleave', () => {
+        autoPlayGo();
+    });
+
+    prevSlide.addEventListener('mouseleave', () => {
+        autoPlayGo();
+    });
+
+
     
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -916,27 +891,7 @@ window.addEventListener('DOMContentLoaded', () => {
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+/* #1 slider */
 
     // const slides = document.querySelectorAll('.offer__slide'),
     //       sliderNext = document.querySelector('.offer__slider-next'),
@@ -989,4 +944,158 @@ window.addEventListener('DOMContentLoaded', () => {
     // sliderPrev.addEventListener('click', () => {
     //     plusSlider(-1);
     // });
+
+
+    /* calculator */
+
+
+    const result = document.querySelector('.calculating__result span');
+    let sex,
+        height, weight, age,
+        ratio;
+
+    if (localStorage.getItem('sex')) {
+        sex = localStorage.getItem('sex');
+    } else {
+        sex = 'female';
+        localStorage.setItem('sex', 'female');
+    }
+
+    if (localStorage.getItem('ratio')) {
+        ratio = localStorage.getItem('ratio');
+    } else {
+        ratio = 1.375;
+        localStorage.setItem('ratio', 1.375);
+    }
+
+    function calcTotal() {
+        if (!sex || !height || !weight || !age || !ratio) {
+            result.textContent = '___';
+            return;
+        }
+
+        if (sex === 'female') {
+            result.textContent = Math.round((447.6 + (9.2 * weight) + (3.1 * height) - (4.3 * age)) * ratio);
+        } else {
+            result.textContent = Math.round((88.36 + (13.4 * weight) + (4.8 * height) - (5.7 * age)) * ratio);
+        }
+    }
+    calcTotal();
+
+    function initLocalSettings(selector, activeClass) {
+        const elements = document.querySelectorAll(selector);
+
+        elements.forEach(elem => {
+            elem.classList.remove(activeClass);
+            
+            if (elem.getAttribute('id') === localStorage.getItem('sex')) {
+                elem.classList.add(activeClass);
+            }
+
+            if (elem.getAttribute('data-ratio') === localStorage.getItem('ratio')) {
+                elem.classList.add(activeClass);
+            }
+        });
+    }
+
+    initLocalSettings('#gender div', 'calculating__choose-item_active');
+    initLocalSettings('.calculating__choose_big div', 'calculating__choose-item_active');
+
+    function getStaticInforamtion(parentSelector, activeClass) {
+        const elements = document.querySelectorAll(parentSelector);
+
+        elements.forEach(elem => {
+            elem.addEventListener('click', (event) => {
+                if (event.target.getAttribute('data-ratio')) {
+                    ratio = +event.target.getAttribute('data-ratio');
+                    localStorage.setItem('ratio', +event.target.getAttribute('data-ratio'));
+                } else {
+                    sex = event.target.getAttribute('id');
+                    localStorage.setItem('sex', event.target.getAttribute('id'));
+                }
+                // console.log(ratio, sex);
+
+                elements.forEach(elem => {
+                    elem.classList.remove(activeClass);
+                });
+    
+                event.target.classList.add(activeClass);
+                calcTotal();
+            });
+        });
+    }
+
+    getStaticInforamtion('#gender div', 'calculating__choose-item_active');
+    getStaticInforamtion('.calculating__choose_big div', 'calculating__choose-item_active');
+
+    function getDynamicInformation(selector) {
+        const input = document.querySelector(selector);
+
+        input.addEventListener('input', () => {
+
+            if (input.value.match(/\D/ig)) {
+                input.style.border = '1px solid #ff0000';
+            } else {
+                input.style.border = 'none';
+            }
+
+            switch(input.getAttribute('id')) {
+                case 'height':
+                    height = +input.value;
+                    break;
+                case 'weight':
+                    weight = +input.value;
+                    break;
+                case 'age':
+                    age = +input.value;
+                    break;
+            }
+            calcTotal();
+        });
+    }
+
+    getDynamicInformation('#height');
+    getDynamicInformation('#weight');
+    getDynamicInformation('#age');
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 });
