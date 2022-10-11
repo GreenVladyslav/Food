@@ -1,5 +1,8 @@
-function form() {
-    const forms = document.querySelectorAll('form'),
+import {postData} from '../services/services';
+import {openModal, closeModal} from './modal';
+
+function form(formSelector, modalTimerId) {
+    const forms = document.querySelectorAll(formSelector),
           formInput = document.querySelectorAll('input');
     
     const messages = {
@@ -18,17 +21,17 @@ function form() {
     //     });
     // }
 
-    const postData = async (url, data) => {
-        const res = await fetch(url, {
-            method: 'POST',
-            headers: {
-                'Content-type': 'application/json'
-            },
-            body: data
-        });
+    // const postData = async (url, data) => {
+    //     const res = await fetch(url, {
+    //         method: 'POST',
+    //         headers: {
+    //             'Content-type': 'application/json'
+    //         },
+    //         body: data
+    //     });
 
-        return await res.json();
-    };
+    //     return await res.json();
+    // };
 
 
     function bindPostData(form) {
@@ -76,7 +79,7 @@ function form() {
         const prevModalDialog  = document.querySelector('.modal__dialog');
 
         prevModalDialog.classList.add('hide');
-        openModal();
+        openModal('.modal', modalTimerId);
 
         const thanksModal = document.createElement('div');
         thanksModal.classList.add('modal__dialog');
@@ -92,9 +95,9 @@ function form() {
             thanksModal.remove();
             prevModalDialog.classList.add('show');
             prevModalDialog.classList.remove('hide');
-            closeModal();
+            closeModal('.modal');
         }, 4000);
     }
 }
 
-module.exports = form;
+export default form;

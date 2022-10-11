@@ -1,40 +1,68 @@
-function modal() {
-    const modalTrigger = document.querySelectorAll('[data-modal]'),
-          modal = document.querySelector('.modal'),
-          scroll = calcScroll();
-    let btnPressedModalTrigger;
+import calcScroll from './calcScroll';
 
+function openModal(modalSelector, modalTimerId) {
+    const modal = document.querySelector(modalSelector);
+    const scroll = calcScroll();
 
-    function openModal() {
-        modal.classList.add('show', 'fade');
-        modal.classList.remove('hide');
-        document.body.style.overflow = 'hidden';
-        /* допустим вариант с toggle только нужно добавить класс show = modal*/
+    modal.classList.add('show', 'fade');
+    modal.classList.remove('hide');
+    document.body.style.overflow = 'hidden';
+    /* допустим вариант с toggle только нужно добавить класс show = modal*/
+    
+    console.log(modalTimerId);
+    if (modalTimerId) {
         clearInterval(modalTimerId);
-
-        document.body.style.marginRight = `${scroll}px`;
-
-        btnPressedModalTrigger = true;
     }
+
+    document.body.style.marginRight = `${scroll}px`;
+
+}
+
+function closeModal(modalSelector) {
+    const modal = document.querySelector(modalSelector);
+
+    modal.classList.add('hide', 'fade');
+    modal.classList.remove('show');
+    document.body.style.overflow = '';
+    document.body.style.marginRight = '0px';
+}
+
+function modal(triggerSelector, modalSelector, modalTimerId) {
+    const modalTrigger = document.querySelectorAll(triggerSelector),
+          modal = document.querySelector(modalSelector);
+        //   scroll = calcScroll();
+    
+
+
+    // function openModal() {
+    //     modal.classList.add('show', 'fade');
+    //     modal.classList.remove('hide');
+    //     document.body.style.overflow = 'hidden';
+    //     /* допустим вариант с toggle только нужно добавить класс show = modal*/
+    //     clearInterval(modalTimerId);
+
+    //     document.body.style.marginRight = `${scroll}px`;
+
+    //     btnPressedModalTrigger = true;
+    // }
 
     modalTrigger.forEach(btn => {
-        btn.addEventListener('click', openModal);
+        btn.addEventListener('click', () => openModal(modalSelector, modalTimerId));
     });
 
-    function closeModal() {
-            modal.classList.add('hide', 'fade');
-            modal.classList.remove('show');
-            document.body.style.overflow = '';
-            document.body.style.marginRight = '0px';
-
-    }
+    // function closeModal() {
+    //     modal.classList.add('hide', 'fade');
+    //     modal.classList.remove('show');
+    //     document.body.style.overflow = '';
+    //     document.body.style.marginRight = '0px';
+    // }
 
 
     modal.addEventListener('click', (event) => {
         const target = event.target;
 
         if (target === modal || target.getAttribute('data-close') == '') {
-            closeModal();
+            closeModal(modalSelector);
         }
         // if (target && target.classList.contains('modal')) {
         //     closeModal();
@@ -43,7 +71,7 @@ function modal() {
 
     document.addEventListener('keydown', (event) => {
         if (event.code === 'Escape' && modal.classList.contains('show')) {
-            closeModal();
+            closeModal(modalSelector);
         }
         /* modal.classList.contains('show') проверим дабы лишний раз не работала команда  */
     });
@@ -53,35 +81,24 @@ function modal() {
             document.body.scrollHeight, document.documentElement.scrollHeight
         );
 
-        if (!btnPressedModalTrigger && window.pageYOffset + document.documentElement.clientHeight >= scrollHeight -1) {
-                openModal();
+        if (window.pageYOffset + document.documentElement.clientHeight >= scrollHeight -1) {
+                if (modalTimerId) {
+                    window.removeEventListener('scroll', showModalByScroll);
+                } else {
+                    openModal(modalSelector, modalTimerId);
+                }
             window.removeEventListener('scroll', showModalByScroll);
         }
     }
 
     window.addEventListener('scroll', showModalByScroll);
 
-    const modalTimerId = setTimeout(() => {
-        openModal();
-        window.removeEventListener('scroll', showModalByScroll);
-    }, 50000);
-
-    function calcScroll() {
-        const div = document.createElement('div');
-
-        div.style.width = '50px';
-        div.style.height = '50px';
-        div.style.overflowY = 'scroll';
-        div.style.visibility = 'hidden';
-
-        document.body.append(div);
-
-        let scrollWidth = div.offsetWidth - div.clientWidth;
-
-        div.remove();
-
-        return scrollWidth;
-    }
+    // const modalTimerId = setTimeout(() => {
+    //     openModal();
+    //     window.removeEventListener('scroll', showModalByScroll);
+    // }, 50000);
 }
 
-module.exports = modal;
+export default modal;
+export {openModal};
+export {closeModal};

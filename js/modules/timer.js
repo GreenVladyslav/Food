@@ -1,5 +1,5 @@
-function timer() {
-    const deadline = '2022.10.31';
+function timer(id, deadline) {
+    // const deadline = '2022.10.31';
     function getTimeRamaining(endtime) {
         let days, hours, minutes, seconds;
         const t = Date.parse(endtime) - Date.parse(new Date());
@@ -62,7 +62,7 @@ function timer() {
             }
         }
     }
-    setClock('.timer', deadline);
+    setClock(id, deadline);
 }
 
-module.exports = timer;
+export default timer;

@@ -1,18 +1,19 @@
-function slider() {
-    const slider = document.querySelector('.offer__slider'),
-          slides = document.querySelectorAll('.offer__slide'),
-          prevSlide = document.querySelector('.offer__slider-prev'),
-          nextSlide = document.querySelector('.offer__slider-next'),
-          total = document.querySelector('#total'),
-          current = document.querySelector('#current'),
-          wrapperSlider = document.querySelector('.offer__slider-wrapper'),
-          sliderField = document.querySelector('.offer__slider-inner'),
+function slider({container, slide, prevArrow, nextArrow, totalCounter, currentCounter, wrapper, field,
+    autoplay = false}) {
+    const slider = document.querySelector(container),
+          slides = document.querySelectorAll(slide),
+          prevSlide = document.querySelector(prevArrow),
+          nextSlide = document.querySelector(nextArrow),
+          total = document.querySelector(totalCounter),
+          current = document.querySelector(currentCounter),
+          wrapperSlider = document.querySelector(wrapper),
+          sliderField = document.querySelector(field),
           width = getComputedStyle(wrapperSlider).width;
 
     let slideIndex = 1;
     let offset = 0;
     const dots = [];
-    let autoplay = false;
+    // let autoplay = false;
 
     function getZero(num) {
         if (num < 10) {
@@ -101,49 +102,43 @@ function slider() {
         return +str.replace(/\D/g, '');
     }
 
-    function nextSlides() {
-        nextSlide.addEventListener('click', () => {
-            if (offset == deleteNoDigits(width) * (slides.length - 1)) {
-                offset = 0;
-            } else {
-                offset += deleteNoDigits(width);
-            }
-    
-            sliderField.style.transform = `translateX(-${offset}px)`;
+    nextSlide.addEventListener('click', () => {
+        if (offset == deleteNoDigits(width) * (slides.length - 1)) {
+            offset = 0;
+        } else {
+            offset += deleteNoDigits(width);
+        }
 
-            if (slideIndex == slides.length) {
-                slideIndex = 1;
-            } else {
-                slideIndex++;
-            }
-    
-            currentSlider();
-            dotActive();
-        });
-    }
-    nextSlides();
+        sliderField.style.transform = `translateX(-${offset}px)`;
 
-    function prevSlides() {
-        prevSlide.addEventListener('click', () => {
-            if (offset == 0) {
-                offset = deleteNoDigits(width) * (slides.length - 1);
-            } else {
-                offset += deleteNoDigits(width);
-            }
-    
-            sliderField.style.transform = `translateX(-${offset}px)`;
-    
-            if (slideIndex == 1) {
-                slideIndex = slides.length;
-            } else {
-                slideIndex--;
-            }
-    
-            currentSlider();
-            dotActive();
-        });
-    }
-    prevSlides();
+        if (slideIndex == slides.length) {
+            slideIndex = 1;
+        } else {
+            slideIndex++;
+        }
+
+        currentSlider();
+        dotActive();
+    });
+
+    prevSlide.addEventListener('click', () => {
+        if (offset == 0) {
+            offset = deleteNoDigits(width) * (slides.length - 1);
+        } else {
+            offset += deleteNoDigits(width);
+        }
+
+        sliderField.style.transform = `translateX(-${offset}px)`;
+
+        if (slideIndex == 1) {
+            slideIndex = slides.length;
+        } else {
+            slideIndex--;
+        }
+
+        currentSlider();
+        dotActive();
+    });
     
 
     dots.forEach(dot => {
@@ -253,4 +248,4 @@ function slider() {
     // });
 }
 
-module.exports = slider;
+export default slider;

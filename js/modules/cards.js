@@ -1,4 +1,6 @@
-function classes() {
+import {getResource} from '../services/services';
+
+function cards() {
     class MenuCard {
         constructor(src, alt, subtitle, descr, price, parentSelector, ...classes) {
             this.src = src;
@@ -40,15 +42,15 @@ function classes() {
     }
 
 
-    const getResource = async (url) => {
-        const res = await fetch(url);
+    // const getResource = async (url) => {
+    //     const res = await fetch(url);
 
-        if (!res.ok) {
-            throw new Error (`Could now fetch ${url}, status: ${res.status}`);
-        }
+    //     if (!res.ok) {
+    //         throw new Error (`Could now fetch ${url}, status: ${res.status}`);
+    //     }
 
-        return res.json();
-    };
+    //     return res.json();
+    // };
 
     getResource('http://localhost:3000/menu')
         .then(data => {
@@ -122,4 +124,4 @@ function classes() {
     //     });
 }
 
-module.exports = classes;
+export default cards;
