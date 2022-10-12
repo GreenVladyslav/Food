@@ -7,9 +7,7 @@ function openModal(modalSelector, modalTimerId) {
     modal.classList.add('show', 'fade');
     modal.classList.remove('hide');
     document.body.style.overflow = 'hidden';
-    /* допустим вариант с toggle только нужно добавить класс show = modal*/
     
-    console.log(modalTimerId);
     if (modalTimerId) {
         clearInterval(modalTimerId);
     }
@@ -30,33 +28,10 @@ function closeModal(modalSelector) {
 function modal(triggerSelector, modalSelector, modalTimerId) {
     const modalTrigger = document.querySelectorAll(triggerSelector),
           modal = document.querySelector(modalSelector);
-        //   scroll = calcScroll();
     
-
-
-    // function openModal() {
-    //     modal.classList.add('show', 'fade');
-    //     modal.classList.remove('hide');
-    //     document.body.style.overflow = 'hidden';
-    //     /* допустим вариант с toggle только нужно добавить класс show = modal*/
-    //     clearInterval(modalTimerId);
-
-    //     document.body.style.marginRight = `${scroll}px`;
-
-    //     btnPressedModalTrigger = true;
-    // }
-
     modalTrigger.forEach(btn => {
         btn.addEventListener('click', () => openModal(modalSelector, modalTimerId));
     });
-
-    // function closeModal() {
-    //     modal.classList.add('hide', 'fade');
-    //     modal.classList.remove('show');
-    //     document.body.style.overflow = '';
-    //     document.body.style.marginRight = '0px';
-    // }
-
 
     modal.addEventListener('click', (event) => {
         const target = event.target;
@@ -93,10 +68,6 @@ function modal(triggerSelector, modalSelector, modalTimerId) {
 
     window.addEventListener('scroll', showModalByScroll);
 
-    // const modalTimerId = setTimeout(() => {
-    //     openModal();
-    //     window.removeEventListener('scroll', showModalByScroll);
-    // }, 50000);
 }
 
 export default modal;

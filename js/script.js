@@ -1,4 +1,8 @@
 'use strict';
+require('es6-promise').polyfill();
+import 'nodelist-foreach-polyfill';
+
+
 import calc from './modules/calc';
 import cards from './modules/cards';
 import form from './modules/form';
@@ -13,7 +17,6 @@ window.addEventListener('DOMContentLoaded', () => {
 
     const modalTimerId = setTimeout(() => {
         openModal('.modal', modalTimerId);
-        // window.removeEventListener('scroll', showModalByScroll);
     }, 5000);
     
     tabs('.tabcontent', '.tabheader__item', '.tabheader__items', 'tabheader__item_active');
